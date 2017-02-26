@@ -51,6 +51,7 @@
 
 /* USER CODE BEGIN (1) */
 #include "mibspi.h"
+#include "stdlib.h"
 /* USER CODE END */
 
 /** @fn void main(void)
@@ -67,7 +68,7 @@
 /* USER CODE END */
 
 int main(void)
-{
+ {
     /* USER CODE BEGIN (3) */
 
     //ones data set
@@ -76,13 +77,31 @@ int main(void)
     //zeros data set
     uint16_t txBuffer2[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
+    uint16_t dataFromSaleae[100];
+    dataFromSaleae[0] = 0xFF;
+    char dataToPrint[2];
+
     mibspiInit();
 
     while(1){
-        int n;
-        for (n=0; n<50; n=n+1){
+        int m;
+        //        for (n=0; n<50; n=n+1){
+        //            mibspiSetData(mibspiREG3, 0, txBuffer); //MISO test demonstrated with saleae by varying 1's and 0's
+        //            //mibspiTransfer(mibspiREG3,0);
+        //        }
+
+        for (m=0; m<50;m=m+1){
             mibspiSetData(mibspiREG3, 0, txBuffer);
-            mibspiTransfer(mibspiREG3,0);
+            mibspiTransfer(mibspiREG3, 0);
+            while(mibspiIsTransferComplete(mibspiREG3, 0) == false);
+            mibspiGetData(mibspiREG3, 0, dataFromSaleae); //MISO test demonstrated with saleae by varying 1's and 0's
+            ltoa(dataFromSaleae[0], dataToPrint);
+            printf(dataToPrint);
+            printf("\n");
+            int i;
+            for (i = 0; i < 10000000; i++) {
+
+            }
         }
 
 
